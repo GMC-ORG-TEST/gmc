@@ -7,7 +7,10 @@ on:
 
 env:
   GMC_ENABLE_ON_PUBLISH: true
-  GMC_DEV_URL: 'https://auronen.cokoliv.eu/gmc/'
+  GMC_DEV_URL: 'https://GMC-ORG-TEST.github.io/gmc/'
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
