@@ -49,6 +49,7 @@ jobs:
         with:
           repository: 'GMC-ORG-TEST/gmc-preview'
           path: 'preview-repo'
+          token: ${{ secrets.INTERLINK_TOKEN }}
       - name: Try to push changes
       - run: |
           cd preview-repo
@@ -56,7 +57,7 @@ jobs:
           git remote -vv
           git checkout gh-pages
           echo "123" > index.html
-          git config user.name github-actions
+          git config user.name "Pull Request"
           git config user.email github-actions@github.com
           git add .
           git commit -m "edit"
