@@ -51,7 +51,7 @@ jobs:
           path: 'preview-repo'
           token: ${{ secrets.INTERLINK_TOKEN }}
       - name: Try to push changes
-      - run: |
+        run: |
           cd preview-repo
           git status
           git remote -vv
