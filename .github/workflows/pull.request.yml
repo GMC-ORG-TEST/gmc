@@ -50,7 +50,7 @@ jobs:
           repository: 'GMC-ORG-TEST/gmc-preview'
           path: 'preview-repo'
       - name: Try to push changes
-      - run: |
+        run: |
           cd preview-repo
           git status
           git remote -vv
