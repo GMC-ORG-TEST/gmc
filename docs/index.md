@@ -6,7 +6,7 @@ First two Gothic games use engine called ZenGin, developed by Piranha Bytes and 
 
 The content here is not meant to be taken as the holy word of modding. We are just modders sharing our experiences, knowledge and our favorite work flows.
 
-Feel free to open a pull request with your article or propose changes.
+Feel free to open a pull request with your article or propose changes
 
 You can open a pull request in [this repository](https://github.com/Gothic-Modding-Community/gmc/)
 
