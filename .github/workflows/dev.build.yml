@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - dev
+    paths-ignore:
+      - .github/workflows/*
 
 env:
   GMC_ENABLE_ON_PUBLISH: true
