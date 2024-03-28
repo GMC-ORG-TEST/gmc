@@ -11,40 +11,61 @@ env:
   GMC_ENABLE_ON_PUBLISH: true
 
 jobs:
-  deploy:
+  test-and-deploy-preview:
     runs-on: ubuntu-latest
     steps:
-      # - name: Install Checkout
-      #   uses: actions/checkout@v4
-      #   with:
-      #     # Number of commits to fetch. 0 indicates all history.
-      #     # Default: 1
-      #     # 0 is needed for the update time plugin to work properly
-      #     fetch-depth: 1
-      # - name: Install Python
-      #   id: install-python
-      #   uses: actions/setup-python@v5
-      #   with:
-      #     python-version: 3.12
-      #     cache: pip
-      # - name: Process Python Cache
-      #   id: cache-requirements
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: venv
-      #     key: requirements-${{ steps.install-python.outputs.python-version }}-${{ hashFiles('requirements*.txt') }}
-      # - name: Install Uncached Requirements
-      #   if: steps.cache-requirements.outputs.cache-hit != 'true'
-      #   run: |
-      #     python -m venv venv
-      #     source venv/bin/activate
-      #     pip install -r requirements.txt
-      #     pip install -r requirements-deploy.txt
-      # - name: Run prebuild tests
-      #   run: |
-      #     source venv/bin/activate
-      #     python -m unittest discover tests/ -v
-      - name: Checkout other branch
+      - name: Install Checkout
+        uses: actions/checkout@v4
+        with:
+          # Number of commits to fetch. 0 indicates all history.
+          # Default: 1
+          # 0 is needed for the update time plugin to work properly
+          fetch-depth: 1
+      - name: Install Python
+        id: install-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+          cache: pip
+      - name: Process Python Cache
+        id: cache-requirements
+        uses: actions/cache@v4
+        with:
+          path: venv
+          key: requirements-${{ steps.install-python.outputs.python-version }}-${{ hashFiles('requirements*.txt') }}
+      - name: Install Uncached Requirements
+        if: steps.cache-requirements.outputs.cache-hit != 'true'
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+          pip install -r requirements-deploy.txt
+      - name: Run prebuild tests
+        run: |
+          source venv/bin/activate
+          python -m unittest discover tests/ -v
+      - name: Process MkDocs Plugins & Hooks Cache
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: mkdocs-${{ github.sha }}
+          restore-keys: |
+            mkdocs-
+      - name: Checkout MMI Fork
+        uses: actions/checkout@v4
+        with:
+          repository: 'kamilkrzyskow/mmi-fork'
+          path: 'mmi-fork'
+          token: ${{ secrets.MMI_FORK_READ_TOKEN }}
+      - name: Install MMI
+        run: |
+          source venv/bin/activate
+          pip install "mmi-fork"
+      - name: Build site
+        run: |
+          source venv/bin/activate
+          mkdocs build --clean
+      - name: Checkout preview repository
         uses: actions/checkout@v4
         with:
           repository: 'GMC-ORG-TEST/gmc-preview'
@@ -55,11 +76,14 @@ jobs:
           cd preview-repo
           git status
           git remote -vv
+          git fetch
           git checkout gh-pages
-          echo "123" > index.html
+          git pull
+          mkdir 123
+          cp -r ../site/* 123/
           git config user.name "Pull Request"
           git config user.email github-actions@github.com
           git add .
-          git commit -m "edit"
-          git push
+          git commit -m "${{ github.event.pull_request.number }}"
+          git push --force
           
