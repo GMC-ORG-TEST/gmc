@@ -15,7 +15,7 @@ hooks:
   - overrides/.hooks/theme_overrides_manager.py
   - overrides/.hooks/language_flags.py
   - overrides/.hooks/git_redirects.py
-  - overrides/.hooks/all_plugin_patch.py
+  # - overrides/.hooks/all_plugin_patch.py
   - overrides/.hooks/preferences.py
 
 theme:
