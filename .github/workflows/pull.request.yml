@@ -60,7 +60,7 @@ jobs:
       - name: Install MMI
         run: |
           source venv/bin/activate
-          pip install "mmi-fork"
+          pip install ./mmi-fork
       - name: Build site
         run: |
           source venv/bin/activate
