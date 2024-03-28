@@ -20,6 +20,8 @@ jobs:
           # Number of commits to fetch. 0 indicates all history.
           # Default: 1
           # 0 is needed for the update time plugin to work properly
+          # However, the tests need to be validated first, so
+          # unshallow it later.
           fetch-depth: 1
       - name: Install Python
         id: install-python
@@ -44,6 +46,8 @@ jobs:
         run: |
           source venv/bin/activate
           python -m unittest discover tests/ -v
+      - name: Unshallow repository for build
+        run: git fetch --unshallow
       - name: Process MkDocs Plugins & Hooks Cache
         uses: actions/cache@v4
         with:
